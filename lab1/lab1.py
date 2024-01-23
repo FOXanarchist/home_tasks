@@ -1,3 +1,4 @@
+import time
 def req(temp, S, k):
     # Замена пробелов на знаки
     c = temp.count(' ')
@@ -6,9 +7,8 @@ def req(temp, S, k):
         req(temp.replace(' ', '-', 1),S,k)
         return
     
-    # Очень сложный способ посчитать строку, если пробелов не обнаружено
+    #посчитать строку, если пробелов не обнаружено
     st = list(temp)
-    print(st)
     answer = 0
     f = ''
     for i in st:
@@ -20,14 +20,20 @@ def req(temp, S, k):
         elif i in ['+','-']:
             f = i
 
-
+    
     # answer = eval(temp) 
     if answer == S:
+        print(answer)
         f = open('outpute.txt', 'w')
         f.write(f'{temp}={S}')
         f.close()
         k = 1
+        time.sleep(10)
         exit()
+    else:
+        f = open('outpute.txt', 'w')
+        f.write('None')
+        f.close()
     
     return k
 def main():
@@ -46,7 +52,7 @@ def main():
         tt = req(temp, S, 0)
         if tt == 0:
             f = open('outpute.txt', 'w')
-            f.write(f'None')
+            f.write('None')
             f.close()
 
 if __name__ == '__main__':
