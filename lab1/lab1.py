@@ -1,59 +1,64 @@
-import time
-def req(temp, S, k):
-    # Замена пробелов на знаки
-    c = temp.count(' ')
-    if c > 0:
-        req(temp.replace(' ', '+', 1),S,k)
-        req(temp.replace(' ', '-', 1),S,k)
-        return
+def req(temp, S):
+    # Расстановка знаков "+" и "-"
+    if temp.count(" ") > 0:
+        plus = req(temp.replace(" ", "+", 1), S)
+        if plus:
+            return plus
+        minus = req(temp.replace(" ", "-", 1), S)
+        if minus:
+            return minus
+        return None
     
-    #посчитать строку, если пробелов не обнаружено
-    st = list(temp)
-    answer = 0
-    f = ''
-    for i in st:
-        if i in ['1','2','3','4','5','6','7','8','9','0',]:
-            if f == '+':
-                answer+= int(i)
-            elif f == '-':
-                answer -= int(i)
-        elif i in ['+','-']:
-            f = i
+    operator = ""
+    num = 0
+    c_num = ""
 
-    
-    # answer = eval(temp) 
-    if answer == S:
-        print(answer)
-        f = open('outpute.txt', 'w')
-        f.write(f'{temp}={S}')
-        f.close()
-        k = 1
-        time.sleep(10)
-        exit()
-    else:
-        f = open('outpute.txt', 'w')
-        f.write('None')
-        f.close()
-    
-    return k
+    for i in temp:
+        if i in {"+", "-"}:
+            operator = i
+        else:
+            c_num += i
+            continue
+
+        newNum = int(c_num)
+        if operator == "+":
+            num += newNum
+        elif operator == "-":
+            num -= newNum
+        c_num = ""
+
+    if c_num:
+        newNum = int(c_num)
+        if operator == "+":
+            num += newNum
+        elif operator == "-":
+            num -= newNum
+
+    # сравнивание результата с ответом
+    if num == S:
+        return f"{temp} = {S}"
+
+    return None
+
+
 def main():
-    
-    # Получение данных из файла
-    with open('lab1.txt', 'r', encoding='utf-8') as file:
+    with open("lab1.txt") as file:
         temp = file.readline()
-
-        # Распределение данных по переменным
         A = list(map(int, temp.split()))
-        N = A.pop(0)
-        S = A.pop()
-        temp = temp[temp.find(' ')+1:temp.rfind(' ')]
+        s = A.pop()
+        # Получение строки начиная с индекса 1-го пробела и заканчивая индексом последнего
+        temp = temp[temp.find(" ")+1:temp.rfind(" ")]
         
-        # Запуск рекурсии
-        tt = req(temp, S, 0)
-        if tt == 0:
-            f = open('outpute.txt', 'w')
-            f.write('None')
-            f.close()
+        answer = req(temp, s)
+        # Запись результата 
+        if answer:
+            print(answer)
+            with open("outpute.txt", "w") as file:
+                file.write(answer)
+        else:
+            print("no solution")
+            with open("outpute.txt.txt", "w") as file:
+                file.write("no solution")
 
-if __name__ == '__main__':
+if __name__ == "main":
     main()
